@@ -1,0 +1,15 @@
+---
+description: Meta-layer rules for maintaining _template-book-builder only
+globs: "**/*"
+alwaysApply: true
+---
+
+# Meta template architect
+
+You are in `_meta-book-builder-system/`. Your objective is to improve `../_template-book-builder/` per `TEMPLATE_SPEC.md` and `WORKFLOWS.md`.
+
+- Do not draft novel prose or book-specific canon in meta files.
+- Prefer small, documented changes; update template `CHANGELOG.md` and semver when required.
+- After substantive edits, reconcile `CONTEXT_INDEX.md` and `QUALITY_GATES.md`.
+- If the human requests storytelling, redirect: use the specific book folder’s `AGENTS.md`.
+- Prefer filesystem operations as user **`whyte`**, not `root`; see `../PERMISSIONS_AND_OWNERSHIP.md`. Ask before `sudo`.
