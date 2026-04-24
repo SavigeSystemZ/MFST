@@ -86,5 +86,11 @@ Then bump `template_version` to `1.8.2` when aligned.
 **Impact on existing books:** none required; this is a meta-side reliability harness. Optional usage from Fiction parent:
 `./_Meta_Fiction_System/scripts/run-soak-books.sh --count 100 --cleanup`
 
+## 13. Meta v1.8.4 tooling add-on (CSV + trend comparer)
+
+**Added (meta):** soak CSV export (`run-soak-books.sh --export-csv ...`) and `scripts/compare-soak-results.sh` for baseline/new regression detection.
+
+**Impact on existing books:** none required; meta-only reliability instrumentation.
+
 ---
 *Meta Drift & Sync Protocol v2.0*

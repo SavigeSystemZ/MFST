@@ -36,6 +36,16 @@ Artifacts are written under a timestamped `_StressSoak_*` directory with:
 - `results.json`
 - `mutated_books.txt`
 - `timings/` per-book stage timings used for p50/p90/p99 latency summaries
+- optional CSV (`--export-csv auto` or `--export-csv timings.csv`) for spreadsheet analysis
+
+### Compare two runs (regression/trend check)
+
+```bash
+./_Meta_Fiction_System/scripts/compare-soak-results.sh \
+  _StressSoak_Auto100/results.json \
+  _StressSoak_Parallel100/results.json \
+  --markdown _StressSoak_Parallel100/COMPARE.md
+```
 
 ## Optional: monorepo migration for “always-on” template CI
 
@@ -47,4 +57,4 @@ If this repository uses git tags for template drops: `template-vX.Y.Z` on commit
 
 ---
 
-*CI and release doc version: 1.3.0*
+*CI and release doc version: 1.4.0*

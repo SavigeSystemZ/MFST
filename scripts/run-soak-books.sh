@@ -20,6 +20,7 @@ out_name=""
 mutate_count=0
 parallel=1
 prune_existing=0
+export_csv_path=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -28,10 +29,11 @@ while [[ $# -gt 0 ]]; do
     --prefix) prefix="${2:?missing value}"; shift 2 ;;
     --out) out_name="${2:?missing value}"; shift 2 ;;
     --parallel) parallel="${2:?missing value}"; shift 2 ;;
+    --export-csv) export_csv_path="${2:?missing value}"; shift 2 ;;
     --prune-existing) prune_existing=1; shift ;;
     --cleanup) cleanup=1; shift ;;
     -h|--help)
-      echo "Usage: $0 [--count N] [--mutate N] [--prefix NAME] [--out DIR] [--parallel N] [--prune-existing] [--cleanup]"
+      echo "Usage: $0 [--count N] [--mutate N] [--prefix NAME] [--out DIR] [--parallel N] [--export-csv PATH|auto] [--prune-existing] [--cleanup]"
       exit 0
       ;;
     *)
@@ -171,6 +173,7 @@ echo "count:        $count"
 echo "mutate_count: $mutate_count"
 echo "parallel:     $parallel"
 echo "prune_exist:  $prune_existing"
+echo "export_csv:   ${export_csv_path:-<disabled>}"
 echo "cleanup:      $cleanup"
 
 # Guard against collisions from prior runs with same prefix/count.
@@ -309,6 +312,32 @@ f"- restore: p50={summary['latency_ms']['restore']['p50']} p90={summary['latency
 encoding="utf-8")
 PY
 
+# Optional per-book timing CSV export.
+if [[ -n "$export_csv_path" ]]; then
+  if [[ "$export_csv_path" == "auto" ]]; then
+    export_csv_path="$workdir/timings.csv"
+  elif [[ "$export_csv_path" != /* ]]; then
+    export_csv_path="$workdir/$export_csv_path"
+  fi
+  export SOAK_EXPORT_CSV="$export_csv_path"
+  python3 - <<'PY'
+from pathlib import Path
+import os
+
+root = Path(os.environ["SOAK_TIMINGS_DIR"])
+out = Path(os.environ["SOAK_EXPORT_CSV"])
+rows = ["stage,book_index,latency_ms"]
+for stage in ("scaffold", "validate", "restore"):
+    d = root / stage
+    for p in sorted(d.glob("*.ms")):
+        idx = p.stem
+        ms = p.read_text().strip()
+        rows.append(f"{stage},{idx},{ms}")
+out.write_text("\n".join(rows) + "\n", encoding="utf-8")
+print("WROTE_CSV", out)
+PY
+fi
+
 # Trim marker files from final artifact directory; timings + report remain.
 rm -f "$workdir"/validate-*.ok "$workdir"/validate-*.fail "$workdir"/restore-*.ok "$workdir"/restore-*.fail
 
@@ -322,5 +351,8 @@ fi
 echo "=== soak complete ==="
 echo "report: $report_md"
 echo "json:   $report_json"
+if [[ -n "$export_csv_path" ]]; then
+  echo "csv:    $export_csv_path"
+fi
 echo "validation: pass=$check_pass fail=$check_fail"
 echo "restore:    pass=$restore_pass fail=$restore_fail"

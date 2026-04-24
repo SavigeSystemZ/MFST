@@ -32,6 +32,8 @@ Append **structural** decisions only; book prose belongs in book folders.
 
 **Enhancement:** added parallel workers (`--parallel`), collision handling (`--prune-existing`), and latency percentile reporting (p50/p90/p99) in report JSON/Markdown.
 
+**Further enhancement:** added optional CSV export and `compare-soak-results.sh` to enforce trend non-regression (Gate 9).
+
 ---
 
 ## 2026-04-23 — Template v1.7.2 prompts index + meta README discovery

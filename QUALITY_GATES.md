@@ -39,6 +39,11 @@ If ALL gates are passed, proceed to update the **template** `../_Template_Fictio
 - **Check:** Do scaffold + validate + merge-restore workflows remain stable at batch scale?
 - **Test:** `./scripts/run-soak-books.sh --count 100 --parallel 8 --prune-existing --cleanup` produces `results.json` with `validation.fail = 0` and `restore.fail = 0` (and latency percentiles present).
 
+## Gate 9: Trend guard (non-regression)
+
+- **Check:** Are recent soak runs getting slower or less reliable?
+- **Test:** `./scripts/compare-soak-results.sh OLD.json NEW.json` reports **no regressions** in fail counts and stage latency metrics (p50/p90/p99/avg/max), or the regression is explicitly accepted by the human.
+
 ---
 
-*Quality gates doc version: 2.4*
+*Quality gates doc version: 2.5*
