@@ -70,5 +70,14 @@ For Major version jumps, the Meta-Architect will provide a `migration_vX_to_vY.s
 `rsync -a --ignore-existing _Template_Fiction_System/scripts/book-writing-quality-check.sh YOUR_BOOK/scripts/`
 Then bump `template_version` to `1.8.1` when aligned.
 
+## 11. Template v1.8.1 → v1.8.2 (stress hardening)
+
+**Changed:** `scripts/book-writing-quality-check.sh` now treats unreadable files as failure (permission/IO safety), and `scripts/ensure-context.sh` emits a root-user warning.
+
+**Existing books:** pull updated scripts if needed:
+- `rsync -a _Template_Fiction_System/scripts/book-writing-quality-check.sh YOUR_BOOK/scripts/`
+- `rsync -a _Template_Fiction_System/scripts/ensure-context.sh YOUR_BOOK/scripts/`
+Then bump `template_version` to `1.8.2` when aligned.
+
 ---
 *Meta Drift & Sync Protocol v2.0*

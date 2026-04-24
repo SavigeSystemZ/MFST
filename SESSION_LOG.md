@@ -10,6 +10,8 @@ Append **structural** decisions only; book prose belongs in book folders.
 
 **Ship:** `_Template_Fiction_System/scripts/book-writing-quality-check.sh` (anti-slop rails, handoff sections, red-team prompt presence, lore contamination scan) and integration into `scripts/ci-full-template.sh`; `QUALITY_GATES.md` Gate 7.
 
+**Stress follow-up:** discovered mixed-ownership edge case during local stress books; hardened lore scan to fail on unreadable files and documented drift path to **1.8.2**.
+
 ---
 
 ## 2026-04-24 — CI, scaffold smoke, MyLit fence (template **1.8.0**)
