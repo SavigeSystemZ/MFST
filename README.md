@@ -26,6 +26,8 @@ To maintain and endlessly improve the `_Template_Fiction_System/`—a world-clas
 | `OPEN_QUESTIONS.md` | Known gaps + **interim** workflows (audio, multi-author, mobile). |
 | `CONTEXT_AUTOMATION.md` | `ensure-context.sh` contract and MCP vs markdown truth. |
 | `../INTEGRATING_EXISTING_BOOKS.md` | Merge the template into an **existing** title folder (Fiction workspace). |
+| `CI_AND_RELEASE.md` | What GitHub Actions runs; how to execute full checks locally. |
+| `MONOREPO_MIGRATION.md` | Optional layout so CI can always smoke-test the template. |
 
 ## The Meta Philosophy
 

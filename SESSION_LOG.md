@@ -4,6 +4,16 @@ Append **structural** decisions only; book prose belongs in book folders.
 
 ---
 
+## 2026-04-24 — CI, scaffold smoke, MyLit fence (template **1.8.0**)
+
+**Goals:** Close engineering gap vs “world-class” bar: automated governance checks, optional monorepo path for full template CI, explicit fencing of speculative MFST scaffolding text.
+
+**Ship:** `.github/workflows/ci.yml`; `scripts/ci-verify.sh`, `ci-template-if-present.sh`, `ci-full-template.sh`, `ci-full-workspace.sh`; `CI_AND_RELEASE.md`, `MONOREPO_MIGRATION.md`; `QUALITY_GATES.md` Gate 6; template `tests/smoke-scaffold.sh`; `SYSTEM_INTEGRATION.md` §4; `02_TEMPLATE_BOUNDARIES…` MyLit implementation blockquote at Part 2.
+
+**Note:** A literal **101/100** score is marketing, not engineering — these changes target **measurable** quality (CI + smoke + contracts).
+
+---
+
 ## 2026-04-23 — Template v1.7.2 prompts index + meta README discovery
 
 **Goals:** Close discoverability gap (`prompts/advanced_passes/` existed but was not indexed); align scattered `*version*` footers; surface `OPEN_QUESTIONS`, `CONTEXT_AUTOMATION`, and `INTEGRATING_EXISTING_BOOKS.md` on meta `README.md`.

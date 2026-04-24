@@ -39,4 +39,4 @@ When adding MCP docs, include **data handling** notes: what leaves the machine, 
 
 ---
 
-*MCP meta doc version: 1.7.2*
+*MCP meta doc version: 1.8.0*

@@ -5,6 +5,8 @@
 | First-time meta session | `README.md`, `AGENTS.md`, `META_CHARTER.md` | `TEMPLATE_SPEC.md` |
 | Meta session history | `SESSION_LOG.md` | `DRIFT_AND_SYNC.md`, template `CHANGELOG.md` |
 | Optional Git (authors) | template `workflows/version-control-optional-git.md` | `MULTI_AGENT_MAINTENANCE.md` §4 |
+| CI / releases | `CI_AND_RELEASE.md` | `.github/workflows/ci.yml`, `scripts/ci-verify.sh` |
+| Monorepo (optional) | `MONOREPO_MIGRATION.md` | Enables template smoke on GitHub when both trees share one remote |
 | Editing template behavior | `MASTER_SYSTEM_PROMPT.md` | `WORKFLOWS.md` |
 | Before finishing a change | `QUALITY_GATES.md` | `../_Template_Fiction_System/CHANGELOG.md` |
 | Book author asks for prose | **Stop meta** — open **book folder** | that project’s `AGENTS.md` |
@@ -24,4 +26,4 @@
 
 ---
 
-*Context index version: 1.7.2*
+*Context index version: 1.8.0*

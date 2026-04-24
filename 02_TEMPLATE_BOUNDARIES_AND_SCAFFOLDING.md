@@ -114,6 +114,14 @@ These files are technically mutable in the project copy, but agents treat them a
 
 ## Part 2: SCAFFOLDING ALGORITHM
 
+> **MyLit implementation profile (read first)**  
+> The **authoritative** commands for creating and upgrading books are:
+> - `_Template_Fiction_System/scripts/scaffold-from-template.sh`
+> - `_Template_Fiction_System/scripts/ensure-context.sh`
+> - `_Template_Fiction_System/scripts/health-check.sh`
+> - `install-mylit-book.sh` (Fiction parent)  
+> The **ASCII algorithms, checksum trees, and shell snippets** in Parts 2–6 below are **MFST architectural intent** (speculative, maximal). They are **not** shipped as runnable scripts in this workspace. When a generic step references `scaffold_fiction_project.sh`, `validate_fiction_project.sh`, or `.template-root`, translate it to the MyLit equivalents above and to `BOOK_MANIFEST.yaml` + `DRIFT_AND_SYNC.md`.
+
 ### 2.1 Scaffolding Trigger
 
 Scaffolding happens when:

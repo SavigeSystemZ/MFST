@@ -23,3 +23,12 @@ Before any update, script, or prompt change is finalized in `_Template_Fiction_S
 - **Test:** Are the bash scripts (`ensure-context.sh`, `scaffold-from-template.sh`) thoroughly commented? Do they warn the user before running destructive actions? Are permissions handled gracefully (avoiding `root` locks)?
 
 If ALL gates are passed, proceed to update the **template** `../_Template_Fiction_System/CHANGELOG.md`, bump `template_version` in `BOOK_MANIFEST.yaml`, and reconcile meta `CONTEXT_INDEX.md` / `DRIFT_AND_SYNC.md` when the blast radius warrants it.
+
+## Gate 6: CI contract (engineering hygiene)
+
+- **Check:** Do shell entrypoints still parse, lint clean, and does a disposable scaffold pass `health-check`?
+- **Test:** From the Fiction parent, `./_Meta_Fiction_System/scripts/ci-full-workspace.sh` exits **0**. On meta-only git remotes, `./_Meta_Fiction_System/scripts/ci-verify.sh` exits **0** (see `CI_AND_RELEASE.md`).
+
+---
+
+*Quality gates doc version: 2.1*

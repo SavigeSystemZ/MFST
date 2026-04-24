@@ -56,5 +56,11 @@ For Major version jumps, the Meta-Architect will provide a `migration_vX_to_vY.s
 
 **Existing books:** `rsync -a _Template_Fiction_System/prompts/README.md YOUR_BOOK/prompts/README.md` (safe overwrite of index only if you have not customized it); merge other files only if you want identical footers; bump `template_version` to `1.7.2` when satisfied.
 
+## 9. Template v1.7.2 → v1.8.0 (CI smoke + meta workflows)
+
+**Added:** `_Template_Fiction_System/tests/smoke-scaffold.sh` (+ `tests/README.md`); meta `.github/workflows/ci.yml`, `scripts/ci-verify.sh`, `scripts/ci-template-if-present.sh`, `scripts/ci-full-template.sh`, `scripts/ci-full-workspace.sh`, `CI_AND_RELEASE.md`, `MONOREPO_MIGRATION.md`, `QUALITY_GATES.md` Gate 6, `02_…` MyLit fence, `SYSTEM_INTEGRATION.md` §4.
+
+**Existing books:** copy `tests/` if you want local smoke parity; optional. Bump `template_version` to `1.8.0` when aligned.
+
 ---
 *Meta Drift & Sync Protocol v2.0*
