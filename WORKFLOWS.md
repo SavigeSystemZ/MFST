@@ -18,6 +18,13 @@
 3. Add a **health-check** hint in template `SELF_HEALING_AND_ADAPTATION.md`.
 4. MINOR or MAJOR bump per blast radius.
 
+## B2. New optional workflow (Markdown under `workflows/`)
+
+1. Add the file under `_Template_Fiction_System/workflows/` (keep book-agnostic; no lore).
+2. Register it in the template’s `WORKFLOWS.md` table and a row in template `CONTEXT_INDEX.md` when authors should discover it.
+3. **PATCH** bump if purely additive guidance; **MINOR** if it changes recommended defaults for all titles.
+4. If existing books benefit from a one-file merge, add a short subsection to `DRIFT_AND_SYNC.md`.
+
 ## C. New per-tool agent playbook
 
 1. Add `agents/<id>.md` under `_Template_Fiction_System/agents/` (copy from `generic-assistant.md` if needed).
