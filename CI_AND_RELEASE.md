@@ -28,13 +28,14 @@ chmod +x _Meta_Fiction_System/scripts/*.sh _Template_Fiction_System/tests/smoke-
 For repeatable large-batch stress tests (scaffold + validate + merge-restore):
 
 ```bash
-./_Meta_Fiction_System/scripts/run-soak-books.sh --count 100 --cleanup
+./_Meta_Fiction_System/scripts/run-soak-books.sh --count 100 --parallel 8 --prune-existing --cleanup
 ```
 
 Artifacts are written under a timestamped `_StressSoak_*` directory with:
 - `REPORT.md`
 - `results.json`
 - `mutated_books.txt`
+- `timings/` per-book stage timings used for p50/p90/p99 latency summaries
 
 ## Optional: monorepo migration for “always-on” template CI
 
@@ -46,4 +47,4 @@ If this repository uses git tags for template drops: `template-vX.Y.Z` on commit
 
 ---
 
-*CI and release doc version: 1.2.0*
+*CI and release doc version: 1.3.0*

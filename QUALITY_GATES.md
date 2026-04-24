@@ -37,8 +37,8 @@ If ALL gates are passed, proceed to update the **template** `../_Template_Fictio
 ## Gate 8: Soak resilience (release candidate)
 
 - **Check:** Do scaffold + validate + merge-restore workflows remain stable at batch scale?
-- **Test:** `./scripts/run-soak-books.sh --count 100 --cleanup` produces `results.json` with `validation.fail = 0` and `restore.fail = 0`.
+- **Test:** `./scripts/run-soak-books.sh --count 100 --parallel 8 --prune-existing --cleanup` produces `results.json` with `validation.fail = 0` and `restore.fail = 0` (and latency percentiles present).
 
 ---
 
-*Quality gates doc version: 2.3*
+*Quality gates doc version: 2.4*

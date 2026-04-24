@@ -18,6 +18,8 @@ cleanup=0
 prefix="Load"
 out_name=""
 mutate_count=0
+parallel=1
+prune_existing=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -25,9 +27,11 @@ while [[ $# -gt 0 ]]; do
     --mutate) mutate_count="${2:?missing value}"; shift 2 ;;
     --prefix) prefix="${2:?missing value}"; shift 2 ;;
     --out) out_name="${2:?missing value}"; shift 2 ;;
+    --parallel) parallel="${2:?missing value}"; shift 2 ;;
+    --prune-existing) prune_existing=1; shift ;;
     --cleanup) cleanup=1; shift ;;
     -h|--help)
-      echo "Usage: $0 [--count N] [--mutate N] [--prefix NAME] [--out DIR] [--cleanup]"
+      echo "Usage: $0 [--count N] [--mutate N] [--prefix NAME] [--out DIR] [--parallel N] [--prune-existing] [--cleanup]"
       exit 0
       ;;
     *)
@@ -43,6 +47,8 @@ if [[ "$mutate_count" =~ ^[0-9]+$ ]]; then :; else echo "--mutate must be intege
 if (( mutate_count == 0 )); then mutate_count=$(( count / 5 )); fi
 if (( mutate_count < 1 )); then mutate_count=1; fi
 if (( mutate_count > count )); then mutate_count="$count"; fi
+[[ "$parallel" =~ ^[0-9]+$ ]] || { echo "--parallel must be integer" >&2; exit 1; }
+(( parallel > 0 )) || { echo "--parallel must be > 0" >&2; exit 1; }
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 meta_root="$(cd "$script_dir/.." && pwd)"
@@ -62,38 +68,128 @@ mkdir -p "$workdir"
 
 report_md="$workdir/REPORT.md"
 report_json="$workdir/results.json"
+timings_dir="$workdir/timings"
+mkdir -p "$timings_dir/scaffold" "$timings_dir/validate" "$timings_dir/restore"
 
-echo "=== soak start ==="
-echo "fiction_root: $fiction_root"
-echo "workdir:      $workdir"
-echo "count:        $count"
-echo "mutate_count: $mutate_count"
-echo "cleanup:      $cleanup"
+run_parallel_stage() {
+  # run_parallel_stage <label> <function_name> <count> <parallel>
+  local label="$1"
+  local fn="$2"
+  local n="$3"
+  local pool="$4"
+  local running=0
+  local failed=0
+  local i
+  for i in $(seq 1 "$n"); do
+    "$fn" "$i" &
+    running=$((running + 1))
+    if (( running >= pool )); then
+      if ! wait -n; then
+        failed=1
+      fi
+      running=$((running - 1))
+    fi
+  done
+  while (( running > 0 )); do
+    if ! wait -n; then
+      failed=1
+    fi
+    running=$((running - 1))
+  done
+  if (( failed != 0 )); then
+    echo "FAIL: stage ${label} had one or more job failures." >&2
+    return 1
+  fi
+}
 
-scaffold_start="$(date +%s)"
-for i in $(seq 1 "$count"); do
+scaffold_one() {
+  local i="$1"
+  local name
+  local t0 t1
   name="$(printf "%s-%03d-Book" "$prefix" "$i")"
+  t0=$(date +%s%N)
   "$template_root/scripts/scaffold-from-template.sh" "$name" >/dev/null
-done
-scaffold_end="$(date +%s)"
+  t1=$(date +%s%N)
+  echo $(((t1 - t0) / 1000000)) > "$timings_dir/scaffold/${i}.ms"
+}
 
-validate_start="$(date +%s)"
-check_pass=0
-check_fail=0
-for i in $(seq 1 "$count"); do
+validate_one() {
+  local i="$1"
+  local name d t0 t1
   name="$(printf "%s-%03d-Book" "$prefix" "$i")"
   d="$fiction_root/$name"
+  t0=$(date +%s%N)
   if (
     cd "$d" &&
     ./scripts/health-check.sh >/dev/null &&
     ./scripts/ensure-context.sh --status >/dev/null &&
     ./scripts/book-writing-quality-check.sh >/dev/null
   ); then
-    check_pass=$((check_pass + 1))
+    : > "$workdir/validate-${i}.ok"
   else
-    check_fail=$((check_fail + 1))
+    : > "$workdir/validate-${i}.fail"
   fi
-done
+  t1=$(date +%s%N)
+  echo $(((t1 - t0) / 1000000)) > "$timings_dir/validate/${i}.ms"
+}
+
+restore_one() {
+  local i="$1"
+  local name t0 t1
+  name="$(printf "%s-%03d-Book" "$prefix" "$i")"
+  t0=$(date +%s%N)
+  MYLIT_INSTALL_NONINTERACTIVE=1 \
+  MYLIT_BOOKS_ROOT="$fiction_root" \
+  MYLIT_BOOK_DIR="$fiction_root/$name" \
+  MYLIT_TEMPLATE_ROOT="$template_root" \
+    "$installer" >/dev/null
+  t1=$(date +%s%N)
+  echo $(((t1 - t0) / 1000000)) > "$timings_dir/restore/${i}.ms"
+}
+
+restore_verify_one() {
+  local i="$1"
+  local name d
+  name="$(printf "%s-%03d-Book" "$prefix" "$i")"
+  d="$fiction_root/$name"
+  if (
+    cd "$d" &&
+    test -f "workflows/version-control-optional-git.md" &&
+    test -f "assets/audio/README.md" &&
+    test -f "context/book/threads-and-hooks.md"
+  ); then
+    : > "$workdir/restore-${i}.ok"
+  else
+    : > "$workdir/restore-${i}.fail"
+  fi
+}
+
+echo "=== soak start ==="
+echo "fiction_root: $fiction_root"
+echo "workdir:      $workdir"
+echo "count:        $count"
+echo "mutate_count: $mutate_count"
+echo "parallel:     $parallel"
+echo "prune_exist:  $prune_existing"
+echo "cleanup:      $cleanup"
+
+# Guard against collisions from prior runs with same prefix/count.
+if (( prune_existing == 1 )); then
+  for i in $(seq 1 "$count"); do
+    name="$(printf "%s-%03d-Book" "$prefix" "$i")"
+    rm -rf "${fiction_root:?}/$name"
+  done
+fi
+
+scaffold_start="$(date +%s)"
+run_parallel_stage "scaffold" scaffold_one "$count" "$parallel"
+scaffold_end="$(date +%s)"
+
+validate_start="$(date +%s)"
+rm -f "$workdir"/validate-*.ok "$workdir"/validate-*.fail
+run_parallel_stage "validate" validate_one "$count" "$parallel"
+check_pass=$(find "$workdir" -maxdepth 1 -type f -name 'validate-*.ok' | wc -l | tr -d ' ')
+check_fail=$(find "$workdir" -maxdepth 1 -type f -name 'validate-*.fail' | wc -l | tr -d ' ')
 validate_end="$(date +%s)"
 
 mutate_list="$workdir/mutated_books.txt"
@@ -122,32 +218,13 @@ Path(os.environ["SOAK_MUTATE_LIST"]).write_text("\n".join(str(p.name) for p in c
 PY
 
 restore_start="$(date +%s)"
-for i in $(seq 1 "$count"); do
-  name="$(printf "%s-%03d-Book" "$prefix" "$i")"
-  MYLIT_INSTALL_NONINTERACTIVE=1 \
-  MYLIT_BOOKS_ROOT="$fiction_root" \
-  MYLIT_BOOK_DIR="$fiction_root/$name" \
-  MYLIT_TEMPLATE_ROOT="$template_root" \
-    "$installer" >/dev/null
-done
+run_parallel_stage "restore" restore_one "$count" "$parallel"
 restore_end="$(date +%s)"
 
-restore_pass=0
-restore_fail=0
-for i in $(seq 1 "$count"); do
-  name="$(printf "%s-%03d-Book" "$prefix" "$i")"
-  d="$fiction_root/$name"
-  if (
-    cd "$d" &&
-    test -f "workflows/version-control-optional-git.md" &&
-    test -f "assets/audio/README.md" &&
-    test -f "context/book/threads-and-hooks.md"
-  ); then
-    restore_pass=$((restore_pass + 1))
-  else
-    restore_fail=$((restore_fail + 1))
-  fi
-done
+rm -f "$workdir"/restore-*.ok "$workdir"/restore-*.fail
+run_parallel_stage "restore-verify" restore_verify_one "$count" "$parallel"
+restore_pass=$(find "$workdir" -maxdepth 1 -type f -name 'restore-*.ok' | wc -l | tr -d ' ')
+restore_fail=$(find "$workdir" -maxdepth 1 -type f -name 'restore-*.fail' | wc -l | tr -d ' ')
 
 export SOAK_SCAFFOLD_START="$scaffold_start"
 export SOAK_SCAFFOLD_END="$scaffold_end"
@@ -161,10 +238,34 @@ export SOAK_RESTORE_PASS="$restore_pass"
 export SOAK_RESTORE_FAIL="$restore_fail"
 export SOAK_REPORT_JSON="$report_json"
 export SOAK_REPORT_MD="$report_md"
+export SOAK_TIMINGS_DIR="$timings_dir"
 python3 - <<'PY'
 from pathlib import Path
 import json, time
 import os
+
+def pct(vals, q):
+    if not vals:
+        return 0
+    vals = sorted(vals)
+    idx = int(round((q / 100.0) * (len(vals) - 1)))
+    idx = max(0, min(idx, len(vals) - 1))
+    return vals[idx]
+
+def load_ms(stage):
+    d = Path(os.environ["SOAK_TIMINGS_DIR"]) / stage
+    out = []
+    for p in sorted(d.glob("*.ms")):
+        try:
+            out.append(int(p.read_text().strip()))
+        except Exception:
+            pass
+    return out
+
+scaffold_ms = load_ms("scaffold")
+validate_ms = load_ms("validate")
+restore_ms = load_ms("restore")
+
 summary = {
   "timestamp_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
   "suite": "book-template soak + merge-restore",
@@ -177,7 +278,12 @@ summary = {
     "restore": int(os.environ["SOAK_RESTORE_END"]) - int(os.environ["SOAK_RESTORE_START"]),
   },
   "validation": {"pass": int(os.environ["SOAK_CHECK_PASS"]), "fail": int(os.environ["SOAK_CHECK_FAIL"])},
-  "restore": {"pass": int(os.environ["SOAK_RESTORE_PASS"]), "fail": int(os.environ["SOAK_RESTORE_FAIL"])}
+  "restore": {"pass": int(os.environ["SOAK_RESTORE_PASS"]), "fail": int(os.environ["SOAK_RESTORE_FAIL"])},
+  "latency_ms": {
+    "scaffold": {"count": len(scaffold_ms), "p50": pct(scaffold_ms, 50), "p90": pct(scaffold_ms, 90), "p99": pct(scaffold_ms, 99), "max": max(scaffold_ms) if scaffold_ms else 0, "avg": int(sum(scaffold_ms) / len(scaffold_ms)) if scaffold_ms else 0},
+    "validate": {"count": len(validate_ms), "p50": pct(validate_ms, 50), "p90": pct(validate_ms, 90), "p99": pct(validate_ms, 99), "max": max(validate_ms) if validate_ms else 0, "avg": int(sum(validate_ms) / len(validate_ms)) if validate_ms else 0},
+    "restore": {"count": len(restore_ms), "p50": pct(restore_ms, 50), "p90": pct(restore_ms, 90), "p99": pct(restore_ms, 99), "max": max(restore_ms) if restore_ms else 0, "avg": int(sum(restore_ms) / len(restore_ms)) if restore_ms else 0},
+  }
 }
 Path(os.environ["SOAK_REPORT_JSON"]).write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
 Path(os.environ["SOAK_REPORT_MD"]).write_text(
@@ -195,9 +301,16 @@ f"- failures: {summary['restore']['fail']}\n\n"
 f"## Durations (sec)\n\n"
 f"- scaffold: {summary['durations_sec']['scaffold']}\n"
 f"- validate: {summary['durations_sec']['validate']}\n"
-f"- restore: {summary['durations_sec']['restore']}\n",
+f"- restore: {summary['durations_sec']['restore']}\n\n"
+f"## Latency percentiles (ms)\n\n"
+f"- scaffold: p50={summary['latency_ms']['scaffold']['p50']} p90={summary['latency_ms']['scaffold']['p90']} p99={summary['latency_ms']['scaffold']['p99']} avg={summary['latency_ms']['scaffold']['avg']} max={summary['latency_ms']['scaffold']['max']}\n"
+f"- validate: p50={summary['latency_ms']['validate']['p50']} p90={summary['latency_ms']['validate']['p90']} p99={summary['latency_ms']['validate']['p99']} avg={summary['latency_ms']['validate']['avg']} max={summary['latency_ms']['validate']['max']}\n"
+f"- restore: p50={summary['latency_ms']['restore']['p50']} p90={summary['latency_ms']['restore']['p90']} p99={summary['latency_ms']['restore']['p99']} avg={summary['latency_ms']['restore']['avg']} max={summary['latency_ms']['restore']['max']}\n",
 encoding="utf-8")
 PY
+
+# Trim marker files from final artifact directory; timings + report remain.
+rm -f "$workdir"/validate-*.ok "$workdir"/validate-*.fail "$workdir"/restore-*.ok "$workdir"/restore-*.fail
 
 if (( cleanup == 1 )); then
   for i in $(seq 1 "$count"); do

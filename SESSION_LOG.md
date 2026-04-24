@@ -30,6 +30,8 @@ Append **structural** decisions only; book prose belongs in book folders.
 
 **Ship:** `scripts/run-soak-books.sh` (parameterized count/mutate/prefix/cleanup, report JSON+Markdown, deterministic mutation set) plus Gate 8 in `QUALITY_GATES.md`.
 
+**Enhancement:** added parallel workers (`--parallel`), collision handling (`--prune-existing`), and latency percentile reporting (p50/p90/p99) in report JSON/Markdown.
+
 ---
 
 ## 2026-04-23 — Template v1.7.2 prompts index + meta README discovery
