@@ -14,5 +14,9 @@ The Meta-Architect must periodically audit the `agents/*.md` playbooks.
 ## 3. Tool & Command Synchronization
 When a new command or script is added to the `scripts/` folder, the `AGENTS.md` charter must be updated so all agents know the new capability exists.
 
+## 4. Meta session log (governance cadence)
+
+Structural decisions that affect **all** future books (not one title’s plot) belong in `_Meta_Fiction_System/SESSION_LOG.md` with date, goals, and blast radius. Book-level work stays in each title’s `context/SESSION_LOG.md` (optional) or `HANDOFF_BRIEF.md`.
+
 ---
-*Meta Multi-Agent Maintenance v2.0*
+*Meta Multi-Agent Maintenance v2.1*

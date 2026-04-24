@@ -44,5 +44,11 @@ For Major version jumps, the Meta-Architect will provide a `migration_vX_to_vY.s
 4. Run `./scripts/ensure-context.sh` then `./scripts/health-check.sh` in the book root.
 5. Set `template_version: "1.7.0"` when satisfied.
 
+## 7. Template v1.7.0 → v1.7.1 (optional Git workflow doc)
+
+**Added:** `workflows/version-control-optional-git.md`; index links in template `WORKFLOWS.md`, `README.md`, `CONTEXT_INDEX.md`; Cursor `CONTEXT_LOAD_ORDER.md` MCP reminder.
+
+**Existing books:** `rsync -a --ignore-existing _Template_Fiction_System/workflows/version-control-optional-git.md YOUR_BOOK/workflows/` (or merge full `workflows/` selectively), then bump `template_version` to `1.7.1` when satisfied.
+
 ---
 *Meta Drift & Sync Protocol v2.0*
