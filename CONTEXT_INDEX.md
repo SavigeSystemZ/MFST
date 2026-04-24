@@ -24,4 +24,4 @@
 
 ---
 
-*Context index version: 1.7.1*
+*Context index version: 1.7.2*

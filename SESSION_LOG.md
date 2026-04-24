@@ -4,6 +4,14 @@ Append **structural** decisions only; book prose belongs in book folders.
 
 ---
 
+## 2026-04-23 — Template v1.7.2 prompts index + meta README discovery
+
+**Goals:** Close discoverability gap (`prompts/advanced_passes/` existed but was not indexed); align scattered `*version*` footers; surface `OPEN_QUESTIONS`, `CONTEXT_AUTOMATION`, and `INTEGRATING_EXISTING_BOOKS.md` on meta `README.md`.
+
+**Ship:** Template `1.7.2`; `DRIFT_AND_SYNC.md` §8; `META_CHARTER.md` routing note (**1.3.0**).
+
+---
+
 ## 2026-04-23 — Template v1.7.1 optional Git playbook
 
 **Goals:** Ship non-mandatory Git guidance (SESSION_LOG “next session” item) without requiring VCS for novelists.

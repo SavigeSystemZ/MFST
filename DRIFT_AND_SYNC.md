@@ -50,5 +50,11 @@ For Major version jumps, the Meta-Architect will provide a `migration_vX_to_vY.s
 
 **Existing books:** `rsync -a --ignore-existing _Template_Fiction_System/workflows/version-control-optional-git.md YOUR_BOOK/workflows/` (or merge full `workflows/` selectively), then bump `template_version` to `1.7.1` when satisfied.
 
+## 8. Template v1.7.1 → v1.7.2 (prompts index + doc footer parity)
+
+**Changed:** `prompts/README.md` (indexes `advanced_passes/`); nested README version stamps aligned across `context/`, `skills/`, `MCP_GUIDANCE.md`, `WORKFLOWS.md` (book index), `CONTEXT_INDEX.md`, `SELF_HEALING_AND_ADAPTATION.md`.
+
+**Existing books:** `rsync -a _Template_Fiction_System/prompts/README.md YOUR_BOOK/prompts/README.md` (safe overwrite of index only if you have not customized it); merge other files only if you want identical footers; bump `template_version` to `1.7.2` when satisfied.
+
 ---
 *Meta Drift & Sync Protocol v2.0*

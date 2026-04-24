@@ -23,6 +23,9 @@ To maintain and endlessly improve the `_Template_Fiction_System/`—a world-clas
 | `DRIFT_AND_SYNC.md` | Protocols for updating existing book projects when the master template is upgraded. |
 | `QUALITY_GATES.md` | The checklist that must be passed before a new version of the template is finalized. |
 | `SESSION_LOG.md` | Dated meta-session decisions (template evolution, not book prose). |
+| `OPEN_QUESTIONS.md` | Known gaps + **interim** workflows (audio, multi-author, mobile). |
+| `CONTEXT_AUTOMATION.md` | `ensure-context.sh` contract and MCP vs markdown truth. |
+| `../INTEGRATING_EXISTING_BOOKS.md` | Merge the template into an **existing** title folder (Fiction workspace). |
 
 ## The Meta Philosophy
 

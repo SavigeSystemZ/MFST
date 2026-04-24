@@ -36,6 +36,10 @@ If template rules conflict with a book’s needs, **the book folder wins locally
 
 - Prefer file ownership by the human’s primary account (**`whyte`**). Agents should avoid creating manuscript or template files as `root` without follow-up `chown` (see workspace `PERMISSIONS_AND_OWNERSHIP.md`).
 
+## Routing
+
+- For **which file to open next**, use `CONTEXT_INDEX.md` (kept in semantic lockstep with template releases when possible).
+
 ---
 
-*Charter version: 1.2.0*
+*Charter version: 1.3.0*
