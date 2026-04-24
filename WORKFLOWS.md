@@ -48,4 +48,4 @@ If this tree is versioned with git, tag template releases: `template-vX.Y.Z`.
 
 ---
 
-*Workflows doc version: 1.6.1*
+*Workflows doc version: 1.7.0*

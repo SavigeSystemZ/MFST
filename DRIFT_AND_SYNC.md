@@ -32,5 +32,17 @@ For Major version jumps, the Meta-Architect will provide a `migration_vX_to_vY.s
 
 **Existing books:** merge or copy those files from `_Template_Fiction_System/`; re-run `./scripts/health-check.sh`; set `template_version` to `1.6.1` when satisfied.
 
+## 6. Template v1.6.1 → v1.7.0 (MCP + asset seeds + hygiene)
+
+**Added / changed:** `mcp/mcp-server-config.json` (expanded scopes + `fiction-fetch`), root `.gitignore`, `MCP_GUIDANCE.md` overhaul, `context/_seeds/assets/**`, `ensure-context.sh` asset seeding + status lines, `health-check.sh` requires MCP JSON + JSON syntax warn, optional `assets/audio/`, `install-mylit-book.sh` mkdir, documentation cross-links (`README`, `skills`, `context`, `workflows/context-refresh.md`).
+
+**Existing books:**
+
+1. `rsync -a --ignore-existing _Template_Fiction_System/mcp/ YOUR_BOOK/mcp/`
+2. `rsync -a --ignore-existing _Template_Fiction_System/context/_seeds/assets/ YOUR_BOOK/context/_seeds/assets/`
+3. `rsync -a _Template_Fiction_System/.gitignore YOUR_BOOK/.gitignore` (review merges if you already have a gitignore)
+4. Run `./scripts/ensure-context.sh` then `./scripts/health-check.sh` in the book root.
+5. Set `template_version: "1.7.0"` when satisfied.
+
 ---
 *Meta Drift & Sync Protocol v2.0*

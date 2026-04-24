@@ -3,6 +3,7 @@
 | Task | Load first | Then |
 |------|------------|------|
 | First-time meta session | `README.md`, `AGENTS.md`, `META_CHARTER.md` | `TEMPLATE_SPEC.md` |
+| Meta session history | `SESSION_LOG.md` | `DRIFT_AND_SYNC.md`, template `CHANGELOG.md` |
 | Editing template behavior | `MASTER_SYSTEM_PROMPT.md` | `WORKFLOWS.md` |
 | Before finishing a change | `QUALITY_GATES.md` | `../_Template_Fiction_System/CHANGELOG.md` |
 | Book author asks for prose | **Stop meta** — open **book folder** | that project’s `AGENTS.md` |
@@ -12,6 +13,7 @@
 | Multi-agent template changes | `MULTI_AGENT_MAINTENANCE.md` | template `HANDOFF_PROTOCOL.md`, `agents/` |
 | Context seeds & ensure-context | `CONTEXT_AUTOMATION.md` | template `scripts/ensure-context.sh`, `context/_seeds/` |
 | Multi-modal prompts & media | `TEMPLATE_SPEC.md` §4 | template `assets/`, `assets/prompts/`, `MASTER_SYSTEM_PROMPT.md` |
+| MCP bundle & safety | `MCP_AND_TOOLS.md` | template `mcp/mcp-server-config.json`, `MCP_GUIDANCE.md` |
 
 ## Adjacent paths
 
@@ -21,4 +23,4 @@
 
 ---
 
-*Context index version: 1.6.1*
+*Context index version: 1.7.0*
