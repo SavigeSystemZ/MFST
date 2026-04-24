@@ -11,6 +11,7 @@
 | Cross-layer file map | `../SYSTEM_INTEGRATION.md` | — |
 | Multi-agent template changes | `MULTI_AGENT_MAINTENANCE.md` | template `HANDOFF_PROTOCOL.md`, `agents/` |
 | Context seeds & ensure-context | `CONTEXT_AUTOMATION.md` | template `scripts/ensure-context.sh`, `context/_seeds/` |
+| Multi-modal prompts & media | `TEMPLATE_SPEC.md` §4 | template `assets/`, `assets/prompts/`, `MASTER_SYSTEM_PROMPT.md` |
 
 ## Adjacent paths
 
@@ -20,4 +21,4 @@
 
 ---
 
-*Context index version: 1.5.0*
+*Context index version: 1.6.1*

@@ -15,5 +15,22 @@ When the `_Template_Fiction_System` is upgraded (e.g., from v1.5 to v2.0), exist
 ## 3. Migration Scripts
 For Major version jumps, the Meta-Architect will provide a `migration_vX_to_vY.sh` in the `_Meta_Fiction_System/` to automate the transition.
 
+## 4. Template v1.5.0 → v1.6.0 (assets scaffold)
+
+**Added:** `assets/README.md`, `assets/prompts/README.md` (multi-modal prompts per `TEMPLATE_SPEC.md` §4).
+
+**Existing book directories** (still on 1.5.x in `BOOK_MANIFEST.yaml`):
+
+1. From the parent of `_Template_Fiction_System` (e.g. `Fiction/`), copy only the new tree:
+   - `rsync -a --ignore-existing _Template_Fiction_System/assets/ YOUR_BOOK/assets/`
+2. Run `./scripts/health-check.sh` inside the book root.
+3. Bump `template_version` in that book’s `BOOK_MANIFEST.yaml` to `1.6.0` when satisfied.
+
+## 5. Template v1.6.0 → v1.6.1 (lore-safe rule + psychology rows)
+
+**Changed:** `.cursor/rules/book-writing-core.mdc` (no hard-coded author names), `characters/template-character.md` (Enneagram / trauma / micro-expressions), `AGENTS.md` (assets + red-team + audio note), `install-mylit-book.sh` self-heal directories.
+
+**Existing books:** merge or copy those files from `_Template_Fiction_System/`; re-run `./scripts/health-check.sh`; set `template_version` to `1.6.1` when satisfied.
+
 ---
 *Meta Drift & Sync Protocol v2.0*

@@ -22,33 +22,34 @@ MFST is a **template**, not a direct tool. It is **copied** (scaffolded) into pr
 
 ---
 
+## MyLit layout note (canonical)
+
+Two trees cooperate:
+
+- **Book template (copy source for each title):** `../_Template_Fiction_System/` — runnable scaffold (`BOOK_MANIFEST.yaml`, `scripts/scaffold-from-template.sh`, `scripts/health-check.sh`, `canon/`, `manuscript/`, `agents/`, `assets/`, etc.).
+- **Meta governance (not a book copy):** `../_Meta_Fiction_System/` — specifications and gates (`TEMPLATE_SPEC.md`, `WORKFLOWS.md`, `QUALITY_GATES.md`).
+
+Sections below that describe **MFST** or generic shell steps are **architectural intent**. Operational commands in MyLit are `scripts/scaffold-from-template.sh` and `../install-mylit-book.sh` (see template `README.md`). Prefer **`BOOK_MANIFEST.yaml`** (`template_version`) over fictional marker files unless your fork adds them.
+
+---
+
 ## Part 1: TEMPLATE BOUNDARIES
 
-### 1.1 What Is the Template?
+### 1.1 What Is the Book Template?
 
-**Location:** `/home/whyte/.MyLit/Fiction/_Meta_Fiction_System/`
+**Location:** `/home/whyte/.MyLit/Fiction/_Template_Fiction_System/` (sibling of `_Meta_Fiction_System/`).
 
-**Contents:**
-- `.template-root` — Marker file (empty, just signals "this is a template")
-- `.fiction-template-version` — File containing semantic version (e.g., "1.0.0")
-- All 20 core system documents (00_SYSTEM_OVERVIEW.md through 20_COPILOT_PLAN_MODE_RUNBOOK.md)
-- `agents/` directory (16 agent profiles)
-- `prompts/` directory (master + specialized prompts)
-- `contracts/` directory (IO contracts, validation schemas)
-- `contexts/` directory (context packing rules)
-- `templates/` directory (starter templates for projects)
-- `rules/` directory (safety rules)
-- `skills/` directory (reusable expertise)
-- `hooks/` directory (automation hooks)
-- `scripts/` directory (utility scripts)
-- `meta/` directory (meta-system documentation)
-- `tests/` directory (acceptance test specifications)
-- `architecture/` directory (system design docs)
+**Role:** Default **copy source** for new book directories. Treat it as read-only while authoring inside a scaffolded copy.
 
-**NOT a template:**
-- `git/` directory (project-specific VCS)
-- `.env` files (project-specific config)
-- `_staging/` directory (if present; project-specific workspace)
+**Version marker:** `BOOK_MANIFEST.yaml` → `template_version` (and optional `template_origin`). Validate structure with `./scripts/health-check.sh` from the book root.
+
+**Core layout:** See that folder’s `README.md`. Includes `AGENTS.md`, `MASTER_SYSTEM_PROMPT.md`, `canon/`, `characters/`, `context/` (with `_seeds/` for automation), `manuscript/`, `prompts/`, `workflows/`, `scripts/`, `.cursor/rules/`, `skills/`, `assets/` (multi-modal prompts and media), and safety or handoff docs (`CONTENT_POLICY.md`, `HANDOFF_PROTOCOL.md`, `SELF_HEALING_AND_ADAPTATION.md`).
+
+### 1.1b What Is the Meta System?
+
+**Location:** `/home/whyte/.MyLit/Fiction/_Meta_Fiction_System/` (this governance tree).
+
+**Role:** Evolve the book template safely. Meta agents implement changes under `_Template_Fiction_System/` per `WORKFLOWS.md`; they do **not** replace the book template with meta-only documents unless a human merges them deliberately.
 
 ### 1.2 What Is a Project (Scaffolded Copy)?
 
@@ -74,18 +75,16 @@ MFST is a **template**, not a direct tool. It is **copied** (scaffolded) into pr
 
 **Isolation Key:** Project can MODIFY its copies but CANNOT modify the template.
 
-### 1.3 Immutable Zones (In Template)
+### 1.3 Immutable zones (convention in a book copy)
 
-These files **CANNOT** be modified by project agents:
+Treat these as **locked** unless a human is upgrading from template or explicitly authorizes an edit:
 
-- `.template-root` — Presence confirms this is a template
-- `.fiction-template-version` — Semantic version marker (append-only log)
-- All `agents/*.agent.md` files — Agent contracts don't change mid-execution
-- All documents in `rules/` directory — Safety rules are non-negotiable
-- `skills/` directory — Best practices are immutable
-- `contracts/` directory — IO contracts don't break mid-stream
+- `BOOK_MANIFEST.yaml` lineage — do not falsify `template_origin` / `template_version`; bump `template_version` only when merging template releases (see `DRIFT_AND_SYNC.md`).
+- `agents/*.md` shipped from the template — stable cross-tool contracts; edit only deliberately.
+- `.cursor/rules/*.mdc` — safety and canon constraints; edit only with human intent.
+- `CONTENT_POLICY.md` — boundaries; widen only with human approval.
 
-**Why immutable:** If template files changed during project execution, every running project would break.
+**Why:** Random edits to shared contracts break multi-agent handoffs and drift tracking.
 
 ### 1.4 Mutable Zones (In Project Copy)
 
@@ -120,14 +119,12 @@ These files are technically mutable in the project copy, but agents treat them a
 Scaffolding happens when:
 1. New project is requested
 2. Project root directory is empty OR only contains `.git/` and `.gitignore`
-3. Showrunner issues `scaffold_fiction_project.sh` command
+3. Human or showrunner runs MyLit `scaffold-from-template.sh` / `install-mylit-book.sh` (see template `README.md`)
 
 ```bash
-./scripts/scaffold_fiction_project.sh \
-  --template-path /home/whyte/.MyLit/Fiction/_Meta_Fiction_System/ \
-  --project-path /path/to/new/project/ \
-  --project-name "ProjectCodename" \
-  --author-name "Author Name"
+# MyLit canonical (run from the parent of _Template_Fiction_System, e.g. Fiction/)
+./_Template_Fiction_System/scripts/scaffold-from-template.sh "ProjectCodename"
+# Optional: ../install-mylit-book.sh for merge-into-existing installs (see template README).
 ```
 
 ### 2.2 Fresh Project Scaffolding (New Project)
@@ -138,7 +135,7 @@ Scaffolding happens when:
 
 ```
 STEP 1: Validate Inputs
-  ├─ Template path exists and contains .template-root
+  ├─ Template path exists and contains BOOK_MANIFEST.yaml + scripts/health-check.sh
   ├─ Project path is writable
   ├─ Project name is valid (alphanumeric + underscore)
   ├─ Author name is non-empty
@@ -179,9 +176,8 @@ STEP 5: Initialize Version Control
 
 STEP 6: Post-Scaffolding Validation
   ├─ Verify all template files exist in project
-  ├─ Verify .template-root exists
-  ├─ Verify .fiction-template-version readable
-  ├─ Verify all .agent.md files present
+  ├─ Verify BOOK_MANIFEST.yaml exists and template_version is readable
+  ├─ Verify agents/*.md present
   ├─ Verify directory structure intact
   ├─ Run smoke_test_template.sh against project copy
   └─ If ANY validation fails: Flag for human review
@@ -303,13 +299,11 @@ STEP 7: Post-Merge Validation
 Before any scaffolding, the system verifies:
 
 ```
-✓ Template has .template-root marker
-✓ Template has .fiction-template-version file
-✓ Template version is readable (valid semantic version)
+✓ Template contains BOOK_MANIFEST.yaml with readable template_version
+✓ ./scripts/health-check.sh passes when run from template root (and from a scaffolded copy)
 ✓ All required agent profiles present in agents/
 ✓ All required prompts present in prompts/
-✓ All required contracts present in contracts/
-✓ Directory structure is complete
+✓ Directory structure is complete (including assets/ per TEMPLATE_SPEC.md §4)
 ✓ No corrupted or truncated files
 
 If ANY check fails:
@@ -497,7 +491,7 @@ Every phase completion runs:
 CONFLICT DETECTION CHECKLIST:
   ✓ Template files in project unchanged from scaffolding
   ✓ Project-specific files not overwritten by template copy
-  ✓ .template-root marker still present (no accidental deletion)
+  ✓ BOOK_MANIFEST.yaml still present; lineage fields not corrupted
   ✓ All agent profiles match template originals
   ✓ All safety rules still in place
   ✓ No project files written to template directory
@@ -560,27 +554,18 @@ STEP 6: Document incident
 # Showrunner command to scaffold new fiction project
 
 PROJECT_NAME="EpicTrilogy"
-AUTHOR="Jane Author"
-TEMPLATE_PATH="/home/whyte/.MyLit/Fiction/_Meta_Fiction_System"
-PROJECT_ROOT="/path/to/projects/${PROJECT_NAME}/"
+TEMPLATE_PATH="/home/whyte/.MyLit/Fiction/_Template_Fiction_System"
 
-# Create directory
-mkdir -p "$PROJECT_ROOT"
+# MyLit: scaffold script resolves paths; cwd is optional (see template README)
+PARENT="$(cd "$(dirname "$TEMPLATE_PATH")" && pwd)"
+( cd "$PARENT" && "${TEMPLATE_PATH}/scripts/scaffold-from-template.sh" "$PROJECT_NAME" )
 
-# Run scaffolding
-./scripts/scaffold_fiction_project.sh \
-  --template-path "$TEMPLATE_PATH" \
-  --project-path "$PROJECT_ROOT" \
-  --project-name "$PROJECT_NAME" \
-  --author-name "$AUTHOR"
-
-# Verify scaffolding succeeded
-if [ $? -eq 0 ]; then
+# Verify scaffolding succeeded (scaffold script creates ${PARENT}/${PROJECT_NAME})
+if [[ -d "${PARENT}/${PROJECT_NAME}" ]]; then
   echo "✅ Project scaffolded successfully"
-  echo "Next: cd $PROJECT_ROOT && open PROJECT_BRIEF.md"
+  echo "Next: cd ${PARENT}/${PROJECT_NAME} && edit BOOK_MANIFEST.yaml"
 else
   echo "❌ Scaffolding failed"
-  rm -rf "$PROJECT_ROOT"
   exit 1
 fi
 ```
@@ -592,30 +577,18 @@ fi
 # Showrunner command to upgrade project to new template version
 
 PROJECT_PATH="/path/to/projects/EpicTrilogy"
-TEMPLATE_PATH="/home/whyte/.MyLit/Fiction/_Meta_Fiction_System"
+TEMPLATE_PATH="/home/whyte/.MyLit/Fiction/_Template_Fiction_System"
 
-# Check blocking conditions
-./scripts/validate_fiction_project.sh --check-upgrade-ready "$PROJECT_PATH"
+# MyLit canonical: non-destructive merge of new template files, then self-heal.
+# Set MYLIT_TEMPLATE_ROOT whenever the template is not at ${MYLIT_BOOKS_ROOT}/_Template_Fiction_System.
+MYLIT_BOOKS_ROOT="$(dirname "$PROJECT_PATH")" \
+MYLIT_BOOK_DIR="$PROJECT_PATH" \
+MYLIT_TEMPLATE_ROOT="$TEMPLATE_PATH" \
+MYLIT_INSTALL_NONINTERACTIVE=1 \
+  "$(cd "${TEMPLATE_PATH}/.." && pwd)/install-mylit-book.sh"
 
-if [ $? -ne 0 ]; then
-  echo "❌ Project cannot be upgraded. Resolve blocking issues first."
-  exit 1
-fi
-
-# Perform 3-way merge
-./scripts/update_downstream_project.sh \
-  --project-path "$PROJECT_PATH" \
-  --template-path "$TEMPLATE_PATH" \
-  --merge-mode "3way"
-
-# If conflicts found
-if [ -f "$PROJECT_PATH/.merge-conflicts.txt" ]; then
-  echo "⚠️  Conflicts found. Manual review required."
-  echo "See: $PROJECT_PATH/.merge-conflicts.txt"
-  exit 0
-else
-  echo "✅ Project upgraded successfully"
-fi
+# Then: read ../_Meta_Fiction_System/DRIFT_AND_SYNC.md for version-specific notes;
+# bump template_version in BOOK_MANIFEST.yaml when the human accepts the merge.
 ```
 
 ---
@@ -624,14 +597,14 @@ fi
 
 ### Common Issue 1: Scaffolding Fails (Corruption Detected)
 
-**Symptom:** `scaffold_fiction_project.sh` stops mid-way with checksum error
+**Symptom:** `scaffold-from-template.sh` or `install-mylit-book.sh` fails; `health-check.sh` reports missing paths
 
-**Cause:** Template corrupted or unreadable
+**Cause:** Template checkout incomplete, merge skipped directories, or disk permissions
 
 **Resolution:**
-1. Verify template integrity: `./scripts/audit_fiction_template.sh`
-2. If template damaged: Restore from backup or re-scaffold template from source
-3. Retry project scaffolding
+1. From the book root: `./scripts/health-check.sh` and read any `MISSING` / `HINT` lines.
+2. Re-run `./scripts/ensure-context.sh` and (for merges) `install-mylit-book.sh` with the same template root.
+3. If still failing: compare against a fresh template copy per `DRIFT_AND_SYNC.md`.
 
 ### Common Issue 2: Merge Conflicts Unresolvable
 
@@ -646,46 +619,32 @@ fi
 4. Commit resolution
 5. Verify with smoke test
 
-### Common Issue 3: Project Cannot Be Upgraded
+### Common Issue 3: Project Cannot Be Upgraded (human gate)
 
-**Symptom:** `validate_fiction_project.sh --check-upgrade-ready` fails
+**Symptom:** `health-check.sh` passes but the human refuses to merge template changes (risk to customized prompts/rules).
 
-**Cause:** Project has unresolved contradictions or is mid-phase
+**Cause:** Drift between book copy and upstream template; unresolved canon conflicts noted in `context/HANDOFF_BRIEF.md` or `context/book/decisions-pending.md`.
 
 **Resolution:**
-1. Check PROJECT_STATUS.md for current phase
-2. If mid-phase: Complete phase first, then upgrade
-3. If contradictions: Resolve in CONTRADICTIONS.md, then upgrade
-4. Retry upgrade
+1. Read `DRIFT_AND_SYNC.md` for the target `template_version` delta.
+2. Merge with `install-mylit-book.sh` (`--ignore-existing` behavior) or selective `rsync` from `_Template_Fiction_System/`.
+3. Resolve canon or voice conflicts before bumping `BOOK_MANIFEST.yaml` → `template_version`.
 
 ---
 
 ## Part 8: FILE MANIFEST
 
+### Authoritative on-disk layout
+
+Do **not** treat the ASCII trees in older MFST drafts as the live filesystem.
+
+- **Book template (what authors copy):** `/home/whyte/.MyLit/Fiction/_Template_Fiction_System/README.md` plus `scripts/health-check.sh` (required paths).
+- **Meta governance (specs and gates):** `/home/whyte/.MyLit/Fiction/_Meta_Fiction_System/` — Markdown specifications (`TEMPLATE_SPEC.md`, `WORKFLOWS.md`, this file, etc.); not a substitute for the book template tree.
+
 ### Template Directory Structure (Post-v1.0.0)
 
 ```
-_Meta_Fiction_System/
-├── .template-root                          (marker: empty file)
-├── .fiction-template-version               (content: "1.0.0")
-├── 00_SYSTEM_OVERVIEW.md
-├── 01_AGENT_OPERATING_CONTRACT.md
-├── 02_TEMPLATE_BOUNDARIES_AND_SCAFFOLDING.md
-├── [... all 20 core documents ...]
-├── agents/                                 (16 .agent.md files)
-├── prompts/                                (master + 12 specialized)
-├── contracts/                              (8 IO contracts)
-├── contexts/                               (4 context packing docs)
-├── templates/
-│   ├── project/                            (20 project templates)
-│   └── scene/                              (4 scene templates)
-├── rules/                                  (8 safety rule files)
-├── skills/                                 (10 skill documentation)
-├── hooks/                                  (5 automation hooks)
-├── scripts/                                (7 shell scripts)
-├── meta/                                   (6 meta-system docs)
-├── tests/                                  (5 test specifications)
-└── architecture/                           (existing directory)
+# Legacy MFST diagram — conceptual only. See README paths above.
 ```
 
 ### Project Directory Structure (Post-Scaffolding)

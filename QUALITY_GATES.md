@@ -22,4 +22,4 @@ Before any update, script, or prompt change is finalized in `_Template_Fiction_S
 - **Check:** Can a human novelist with zero coding experience use this?
 - **Test:** Are the bash scripts (`ensure-context.sh`, `scaffold-from-template.sh`) thoroughly commented? Do they warn the user before running destructive actions? Are permissions handled gracefully (avoiding `root` locks)?
 
-If ALL gates are passed, proceed to update the Meta `CHANGELOG.md` and bump the version.
+If ALL gates are passed, proceed to update the **template** `../_Template_Fiction_System/CHANGELOG.md`, bump `template_version` in `BOOK_MANIFEST.yaml`, and reconcile meta `CONTEXT_INDEX.md` / `DRIFT_AND_SYNC.md` when the blast radius warrants it.
