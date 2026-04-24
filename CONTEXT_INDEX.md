@@ -7,6 +7,7 @@
 | Optional Git (authors) | template `workflows/version-control-optional-git.md` | `MULTI_AGENT_MAINTENANCE.md` §4 |
 | CI / releases | `CI_AND_RELEASE.md` | `.github/workflows/ci.yml`, `scripts/ci-verify.sh` |
 | Monorepo (optional) | `MONOREPO_MIGRATION.md` | Enables template smoke on GitHub when both trees share one remote |
+| Book-writing quality contract | template `scripts/book-writing-quality-check.sh` | `QUALITY_GATES.md` Gate 7, `scripts/ci-full-template.sh` |
 | Editing template behavior | `MASTER_SYSTEM_PROMPT.md` | `WORKFLOWS.md` |
 | Before finishing a change | `QUALITY_GATES.md` | `../_Template_Fiction_System/CHANGELOG.md` |
 | Book author asks for prose | **Stop meta** — open **book folder** | that project’s `AGENTS.md` |
@@ -26,4 +27,4 @@
 
 ---
 
-*Context index version: 1.8.0*
+*Context index version: 1.8.1*

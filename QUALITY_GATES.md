@@ -29,6 +29,11 @@ If ALL gates are passed, proceed to update the **template** `../_Template_Fictio
 - **Check:** Do shell entrypoints still parse, lint clean, and does a disposable scaffold pass `health-check`?
 - **Test:** From the Fiction parent, `./_Meta_Fiction_System/scripts/ci-full-workspace.sh` exits **0**. On meta-only git remotes, `./_Meta_Fiction_System/scripts/ci-verify.sh` exits **0** (see `CI_AND_RELEASE.md`).
 
+## Gate 7: Book-writing contract (domain quality)
+
+- **Check:** Are fiction-system guarantees intact (canon-first, anti-slop bans, red-team continuity, handoff baton structure, lore-agnostic template)?
+- **Test:** `./_Template_Fiction_System/scripts/book-writing-quality-check.sh` exits **0** locally, and the same check is included by `scripts/ci-full-template.sh`.
+
 ---
 
-*Quality gates doc version: 2.1*
+*Quality gates doc version: 2.2*

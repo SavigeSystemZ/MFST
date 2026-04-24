@@ -40,6 +40,9 @@ PY
 echo "=== health-check (template as book) ==="
 ( cd "$TEMPLATE" && ./scripts/health-check.sh )
 
+echo "=== writing-system quality contract ==="
+( cd "$TEMPLATE" && ./scripts/book-writing-quality-check.sh )
+
 echo "=== smoke scaffold (creates sibling dir, then removes) ==="
 "$TEMPLATE/tests/smoke-scaffold.sh"
 

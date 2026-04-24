@@ -41,6 +41,7 @@
 ## E. Review checklist before “release”
 
 Execute `QUALITY_GATES.md` in full (includes **Gate 6** — run `./scripts/ci-verify.sh` in meta; `./scripts/ci-full-workspace.sh` from the Fiction parent when the template tree is present).
+Also run **Gate 7** fiction-domain checks via `ci-full-template.sh` (which now executes `scripts/book-writing-quality-check.sh`).
 
 ## F. Propagation to existing books
 
@@ -55,4 +56,4 @@ If this tree is versioned with git, tag template releases: `template-vX.Y.Z`.
 
 ---
 
-*Workflows doc version: 1.8.0*
+*Workflows doc version: 1.8.1*

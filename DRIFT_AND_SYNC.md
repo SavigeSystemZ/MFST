@@ -62,5 +62,13 @@ For Major version jumps, the Meta-Architect will provide a `migration_vX_to_vY.s
 
 **Existing books:** copy `tests/` if you want local smoke parity; optional. Bump `template_version` to `1.8.0` when aligned.
 
+## 10. Template v1.8.0 → v1.8.1 (book-writing quality contract)
+
+**Added:** `_Template_Fiction_System/scripts/book-writing-quality-check.sh`; integrated into `_Meta_Fiction_System/scripts/ci-full-template.sh`.
+
+**Existing books:** copy the script if you want local domain-audit parity:
+`rsync -a --ignore-existing _Template_Fiction_System/scripts/book-writing-quality-check.sh YOUR_BOOK/scripts/`
+Then bump `template_version` to `1.8.1` when aligned.
+
 ---
 *Meta Drift & Sync Protocol v2.0*

@@ -9,6 +9,7 @@ Workflow: `.github/workflows/ci.yml`
    - `bash -n` + `shellcheck` on template `scripts/*.sh`
    - Validates `mcp/mcp-server-config.json` structure (`mcpServers`, `command`, `args`)
    - `./scripts/health-check.sh` inside the template tree
+   - `./scripts/book-writing-quality-check.sh` (fiction-domain contract checks)
    - `_Template_Fiction_System/tests/smoke-scaffold.sh` (creates and deletes a disposable book folder next to the template)
 
 If your remote is **meta-only** (template lives as a sibling directory on disk but not in git), CI still passes governance checks; run the full suite **locally** (below).
@@ -32,4 +33,4 @@ If this repository uses git tags for template drops: `template-vX.Y.Z` on commit
 
 ---
 
-*CI and release doc version: 1.0.0*
+*CI and release doc version: 1.1.0*

@@ -4,6 +4,14 @@ Append **structural** decisions only; book prose belongs in book folders.
 
 ---
 
+## 2026-04-24 — Domain-first quality push (template **1.8.1**)
+
+**Goal:** Ensure “100-quality” means **book-writing system rigor**, not generic app-dev checkboxes.
+
+**Ship:** `_Template_Fiction_System/scripts/book-writing-quality-check.sh` (anti-slop rails, handoff sections, red-team prompt presence, lore contamination scan) and integration into `scripts/ci-full-template.sh`; `QUALITY_GATES.md` Gate 7.
+
+---
+
 ## 2026-04-24 — CI, scaffold smoke, MyLit fence (template **1.8.0**)
 
 **Goals:** Close engineering gap vs “world-class” bar: automated governance checks, optional monorepo path for full template CI, explicit fencing of speculative MFST scaffolding text.
