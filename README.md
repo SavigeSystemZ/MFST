@@ -22,6 +22,7 @@ To maintain and endlessly improve the `_Template_Fiction_System/`—a world-clas
 | `TEMPLATE_SPEC.md` | The strict engineering requirements that the template must adhere to. |
 | `DRIFT_AND_SYNC.md` | Protocols for updating existing book projects when the master template is upgraded. |
 | `QUALITY_GATES.md` | The checklist that must be passed before a new version of the template is finalized. |
+| `SESSION_LOG.md` | Dated meta-session decisions (template evolution, not book prose). |
 
 ## The Meta Philosophy
 
