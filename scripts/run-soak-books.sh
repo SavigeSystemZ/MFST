@@ -200,6 +200,7 @@ export SOAK_FICTION_ROOT="$fiction_root"
 export SOAK_COUNT="$count"
 export SOAK_MUTATE="$mutate_count"
 export SOAK_PREFIX="$prefix"
+export SOAK_PARALLEL="$parallel"
 export SOAK_MUTATE_LIST="$mutate_list"
 python3 - <<'PY'
 from pathlib import Path
@@ -274,6 +275,7 @@ summary = {
   "suite": "book-template soak + merge-restore",
   "count": int(os.environ["SOAK_COUNT"]),
   "mutate_count": int(os.environ["SOAK_MUTATE"]),
+  "parallel": int(os.environ.get("SOAK_PARALLEL", "0")),
   "prefix": os.environ["SOAK_PREFIX"],
   "durations_sec": {
     "scaffold": int(os.environ["SOAK_SCAFFOLD_END"]) - int(os.environ["SOAK_SCAFFOLD_START"]),

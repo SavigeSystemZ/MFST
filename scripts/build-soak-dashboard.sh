@@ -76,25 +76,20 @@ lines = [
     f"- Source: `{fiction}`",
     f"- Entries: {len(rows)} (limit={limit})",
     "",
-    "| Run | Timestamp | Count | Parallel?* | Val Fail | Restore Fail | Scaf p90 | Val p90 | Rest p90 | Report |",
+    "| Run | Timestamp | Count | Parallel | Val Fail | Restore Fail | Scaf p90 | Val p90 | Rest p90 | Report |",
     "|---|---|---:|---:|---:|---:|---:|---:|---:|---|",
 ]
 
 for ts, name, data in rows:
-    # Parallel degree is not stored historically; infer unknown as 0.
     count = g(data, "count", default=0)
+    parallel = g(data, "parallel", default="n/a")
     vfail = g(data, "validation", "fail", default=0)
     rfail = g(data, "restore", "fail", default=0)
     sp90 = g(data, "latency_ms", "scaffold", "p90", default=0)
     vp90 = g(data, "latency_ms", "validate", "p90", default=0)
     rp90 = g(data, "latency_ms", "restore", "p90", default=0)
     report = f"`{name}/REPORT.md`"
-    lines.append(f"| `{name}` | {ts or 'n/a'} | {count or 'n/a'} | n/a | {vfail} | {rfail} | {sp90} | {vp90} | {rp90} | {report} |")
-
-lines += [
-    "",
-    "*`Parallel?` is not present in older `results.json` schema; leave as n/a unless added in future schema.*",
-]
+    lines.append(f"| `{name}` | {ts or 'n/a'} | {count or 'n/a'} | {parallel} | {vfail} | {rfail} | {sp90} | {vp90} | {rp90} | {report} |")
 
 out.write_text("\n".join(lines) + "\n", encoding="utf-8")
 print(f"WROTE_DASHBOARD {out}")

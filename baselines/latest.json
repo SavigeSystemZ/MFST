@@ -1,13 +1,14 @@
 {
-  "timestamp_utc": "2026-04-24T05:22:52Z",
+  "timestamp_utc": "2026-04-24T06:23:23Z",
   "suite": "book-template soak + merge-restore",
   "count": 100,
   "mutate_count": 20,
-  "prefix": "SoakAuto",
+  "parallel": 8,
+  "prefix": "Gate",
   "durations_sec": {
-    "scaffold": 1,
-    "validate": 6,
-    "restore": 8
+    "scaffold": 0,
+    "validate": 1,
+    "restore": 1
   },
   "validation": {
     "pass": 100,
@@ -16,5 +17,31 @@
   "restore": {
     "pass": 100,
     "fail": 0
+  },
+  "latency_ms": {
+    "scaffold": {
+      "count": 100,
+      "p50": 34,
+      "p90": 37,
+      "p99": 38,
+      "max": 42,
+      "avg": 32
+    },
+    "validate": {
+      "count": 100,
+      "p50": 79,
+      "p90": 90,
+      "p99": 95,
+      "max": 97,
+      "avg": 79
+    },
+    "restore": {
+      "count": 100,
+      "p50": 96,
+      "p90": 107,
+      "p99": 109,
+      "max": 110,
+      "avg": 98
+    }
   }
 }

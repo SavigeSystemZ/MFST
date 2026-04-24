@@ -46,6 +46,9 @@ jobs:
             echo "::notice title=Nightly soak skipped::_Template_Fiction_System not in checkout (meta-only repo layout)."
           fi
 
+      - name: Build soak dashboard snapshot
+        run: ./scripts/build-soak-dashboard.sh --limit 40 --out soak-dashboard/README.md
+
       - name: Upload nightly soak artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -56,4 +59,5 @@ jobs:
             _StressSoak_Nightly_${{ github.run_id }}/results.json
             _StressSoak_Nightly_${{ github.run_id }}/timings.csv
             _StressSoak_Nightly_${{ github.run_id }}/COMPARE.md
+            soak-dashboard/README.md
           if-no-files-found: ignore
