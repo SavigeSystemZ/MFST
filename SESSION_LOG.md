@@ -36,6 +36,8 @@ Append **structural** decisions only; book prose belongs in book folders.
 
 **Operationalization:** added `release-gate.sh`, baseline registry (`baselines/latest.json`), and scheduled `.github/workflows/nightly-soak.yml`.
 
+**Ops completion:** added retention pruning (`prune-soak-artifacts.sh`) and dashboard generation (`build-soak-dashboard.sh`) to keep long-run visibility without workspace bloat.
+
 ---
 
 ## 2026-04-23 — Template v1.7.2 prompts index + meta README discovery

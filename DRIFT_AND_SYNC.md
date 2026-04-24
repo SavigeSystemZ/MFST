@@ -98,5 +98,11 @@ Then bump `template_version` to `1.8.2` when aligned.
 
 **Impact on existing books:** none required; meta operational workflow only.
 
+## 15. Meta v1.8.6 tooling add-on (retention + dashboard)
+
+**Added (meta):** `scripts/prune-soak-artifacts.sh` and `scripts/build-soak-dashboard.sh` for long-term soak operations hygiene and visibility.
+
+**Impact on existing books:** none required; meta operational workflow only.
+
 ---
 *Meta Drift & Sync Protocol v2.0*

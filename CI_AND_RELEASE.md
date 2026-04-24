@@ -71,6 +71,20 @@ With baseline promotion (after human approval):
 - Runs full release-gate only when `_Template_Fiction_System/` exists in the same checkout (monorepo layout).
 - Uploads soak artifacts (`REPORT.md`, `results.json`, `timings.csv`, optional `COMPARE.md`).
 
+## Artifact retention & dashboard
+
+Prune old soak artifacts:
+
+```bash
+./_Meta_Fiction_System/scripts/prune-soak-artifacts.sh --days 14
+```
+
+Build/update dashboard from available soak runs:
+
+```bash
+./_Meta_Fiction_System/scripts/build-soak-dashboard.sh --limit 30
+```
+
 ## Optional: monorepo migration for “always-on” template CI
 
 See **`MONOREPO_MIGRATION.md`** if you want GitHub to execute scaffold smoke on every push.
@@ -81,4 +95,4 @@ If this repository uses git tags for template drops: `template-vX.Y.Z` on commit
 
 ---
 
-*CI and release doc version: 1.5.0*
+*CI and release doc version: 1.6.0*

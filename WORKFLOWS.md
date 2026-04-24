@@ -45,6 +45,7 @@ Also run **Gate 7** fiction-domain checks via `ci-full-template.sh` (which now e
 For heavy resilience checks, run `./scripts/run-soak-books.sh --count 100 --parallel 8 --prune-existing --cleanup` from the Fiction parent.
 Compare against a prior baseline with `./scripts/compare-soak-results.sh OLD.json NEW.json`.
 For release candidates, prefer `./scripts/release-gate.sh --count 100 --parallel 8 --baseline baselines/latest.json`.
+Then keep operations clean with `./scripts/prune-soak-artifacts.sh --days 14` and refresh visibility with `./scripts/build-soak-dashboard.sh --limit 30`.
 
 ## F. Propagation to existing books
 
@@ -59,4 +60,4 @@ If this tree is versioned with git, tag template releases: `template-vX.Y.Z`.
 
 ---
 
-*Workflows doc version: 1.8.5*
+*Workflows doc version: 1.8.6*

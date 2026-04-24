@@ -9,6 +9,7 @@
 | Soak / stress testing | `scripts/run-soak-books.sh` | `CI_AND_RELEASE.md`, `_StressSoak_*/REPORT.md` |
 | Soak trend comparison | `scripts/compare-soak-results.sh` | Gate 9 decisions in `QUALITY_GATES.md` |
 | Release gate (one command) | `scripts/release-gate.sh` | `baselines/latest.json`, `CI_AND_RELEASE.md` |
+| Soak operations | `scripts/prune-soak-artifacts.sh`, `scripts/build-soak-dashboard.sh` | Gate 10 + `soak-dashboard/README.md` |
 | Monorepo (optional) | `MONOREPO_MIGRATION.md` | Enables template smoke on GitHub when both trees share one remote |
 | Book-writing quality contract | template `scripts/book-writing-quality-check.sh` | `QUALITY_GATES.md` Gate 7, `scripts/ci-full-template.sh` |
 | Editing template behavior | `MASTER_SYSTEM_PROMPT.md` | `WORKFLOWS.md` |
@@ -30,4 +31,4 @@
 
 ---
 
-*Context index version: 1.8.5*
+*Context index version: 1.8.6*
