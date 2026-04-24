@@ -24,6 +24,14 @@ Append **structural** decisions only; book prose belongs in book folders.
 
 ---
 
+## 2026-04-24 — Soak harness automation
+
+**Goal:** make stress testing repeatable and cheap, not a manual one-off.
+
+**Ship:** `scripts/run-soak-books.sh` (parameterized count/mutate/prefix/cleanup, report JSON+Markdown, deterministic mutation set) plus Gate 8 in `QUALITY_GATES.md`.
+
+---
+
 ## 2026-04-23 — Template v1.7.2 prompts index + meta README discovery
 
 **Goals:** Close discoverability gap (`prompts/advanced_passes/` existed but was not indexed); align scattered `*version*` footers; surface `OPEN_QUESTIONS`, `CONTEXT_AUTOMATION`, and `INTEGRATING_EXISTING_BOOKS.md` on meta `README.md`.

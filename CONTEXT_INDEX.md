@@ -6,6 +6,7 @@
 | Meta session history | `SESSION_LOG.md` | `DRIFT_AND_SYNC.md`, template `CHANGELOG.md` |
 | Optional Git (authors) | template `workflows/version-control-optional-git.md` | `MULTI_AGENT_MAINTENANCE.md` §4 |
 | CI / releases | `CI_AND_RELEASE.md` | `.github/workflows/ci.yml`, `scripts/ci-verify.sh` |
+| Soak / stress testing | `scripts/run-soak-books.sh` | `CI_AND_RELEASE.md`, `_StressSoak_*/REPORT.md` |
 | Monorepo (optional) | `MONOREPO_MIGRATION.md` | Enables template smoke on GitHub when both trees share one remote |
 | Book-writing quality contract | template `scripts/book-writing-quality-check.sh` | `QUALITY_GATES.md` Gate 7, `scripts/ci-full-template.sh` |
 | Editing template behavior | `MASTER_SYSTEM_PROMPT.md` | `WORKFLOWS.md` |
@@ -27,4 +28,4 @@
 
 ---
 
-*Context index version: 1.8.1*
+*Context index version: 1.8.2*

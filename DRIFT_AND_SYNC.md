@@ -79,5 +79,12 @@ Then bump `template_version` to `1.8.1` when aligned.
 - `rsync -a _Template_Fiction_System/scripts/ensure-context.sh YOUR_BOOK/scripts/`
 Then bump `template_version` to `1.8.2` when aligned.
 
+## 12. Meta v1.8.2 tooling add-on (soak harness)
+
+**Added (meta):** `_Meta_Fiction_System/scripts/run-soak-books.sh` and docs wiring (`CI_AND_RELEASE.md`, `QUALITY_GATES.md` Gate 8, context/workflow routing).
+
+**Impact on existing books:** none required; this is a meta-side reliability harness. Optional usage from Fiction parent:
+`./_Meta_Fiction_System/scripts/run-soak-books.sh --count 100 --cleanup`
+
 ---
 *Meta Drift & Sync Protocol v2.0*

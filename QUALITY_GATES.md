@@ -34,6 +34,11 @@ If ALL gates are passed, proceed to update the **template** `../_Template_Fictio
 - **Check:** Are fiction-system guarantees intact (canon-first, anti-slop bans, red-team continuity, handoff baton structure, lore-agnostic template)?
 - **Test:** `./_Template_Fiction_System/scripts/book-writing-quality-check.sh` exits **0** locally, and the same check is included by `scripts/ci-full-template.sh`.
 
+## Gate 8: Soak resilience (release candidate)
+
+- **Check:** Do scaffold + validate + merge-restore workflows remain stable at batch scale?
+- **Test:** `./scripts/run-soak-books.sh --count 100 --cleanup` produces `results.json` with `validation.fail = 0` and `restore.fail = 0`.
+
 ---
 
-*Quality gates doc version: 2.2*
+*Quality gates doc version: 2.3*

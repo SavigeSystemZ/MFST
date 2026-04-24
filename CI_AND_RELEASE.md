@@ -23,6 +23,19 @@ chmod +x _Meta_Fiction_System/scripts/*.sh _Template_Fiction_System/tests/smoke-
 ./_Meta_Fiction_System/scripts/ci-full-workspace.sh
 ```
 
+## Soak harness (book-writing stress)
+
+For repeatable large-batch stress tests (scaffold + validate + merge-restore):
+
+```bash
+./_Meta_Fiction_System/scripts/run-soak-books.sh --count 100 --cleanup
+```
+
+Artifacts are written under a timestamped `_StressSoak_*` directory with:
+- `REPORT.md`
+- `results.json`
+- `mutated_books.txt`
+
 ## Optional: monorepo migration for “always-on” template CI
 
 See **`MONOREPO_MIGRATION.md`** if you want GitHub to execute scaffold smoke on every push.
@@ -33,4 +46,4 @@ If this repository uses git tags for template drops: `template-vX.Y.Z` on commit
 
 ---
 
-*CI and release doc version: 1.1.0*
+*CI and release doc version: 1.2.0*
