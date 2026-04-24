@@ -34,6 +34,8 @@ Append **structural** decisions only; book prose belongs in book folders.
 
 **Further enhancement:** added optional CSV export and `compare-soak-results.sh` to enforce trend non-regression (Gate 9).
 
+**Operationalization:** added `release-gate.sh`, baseline registry (`baselines/latest.json`), and scheduled `.github/workflows/nightly-soak.yml`.
+
 ---
 
 ## 2026-04-23 — Template v1.7.2 prompts index + meta README discovery

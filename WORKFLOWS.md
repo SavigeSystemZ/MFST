@@ -44,6 +44,7 @@ Execute `QUALITY_GATES.md` in full (includes **Gate 6** — run `./scripts/ci-ve
 Also run **Gate 7** fiction-domain checks via `ci-full-template.sh` (which now executes `scripts/book-writing-quality-check.sh`).
 For heavy resilience checks, run `./scripts/run-soak-books.sh --count 100 --parallel 8 --prune-existing --cleanup` from the Fiction parent.
 Compare against a prior baseline with `./scripts/compare-soak-results.sh OLD.json NEW.json`.
+For release candidates, prefer `./scripts/release-gate.sh --count 100 --parallel 8 --baseline baselines/latest.json`.
 
 ## F. Propagation to existing books
 
@@ -58,4 +59,4 @@ If this tree is versioned with git, tag template releases: `template-vX.Y.Z`.
 
 ---
 
-*Workflows doc version: 1.8.4*
+*Workflows doc version: 1.8.5*

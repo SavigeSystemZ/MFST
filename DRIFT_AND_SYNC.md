@@ -92,5 +92,11 @@ Then bump `template_version` to `1.8.2` when aligned.
 
 **Impact on existing books:** none required; meta-only reliability instrumentation.
 
+## 14. Meta v1.8.5 tooling add-on (release gate + baseline registry + nightly soak)
+
+**Added (meta):** `scripts/release-gate.sh`, `baselines/latest.json` + `baselines/README.md`, and `.github/workflows/nightly-soak.yml`.
+
+**Impact on existing books:** none required; meta operational workflow only.
+
 ---
 *Meta Drift & Sync Protocol v2.0*

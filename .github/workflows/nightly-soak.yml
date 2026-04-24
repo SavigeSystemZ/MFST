@@ -1,0 +1,59 @@
+name: Nightly Soak
+
+on:
+  schedule:
+    - cron: "25 6 * * *"
+  workflow_dispatch:
+    inputs:
+      count:
+        description: "Book count for soak run"
+        required: false
+        default: "100"
+      parallel:
+        description: "Parallel workers"
+        required: false
+        default: "8"
+
+permissions:
+  contents: read
+
+jobs:
+  nightly-soak:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update -qq && sudo apt-get install -y shellcheck
+
+      - name: Meta governance verify
+        run: ./scripts/ci-verify.sh
+
+      - name: Nightly release gate (monorepo only)
+        run: |
+          COUNT="${{ github.event.inputs.count || '100' }}"
+          PARALLEL="${{ github.event.inputs.parallel || '8' }}"
+          if [[ -d "_Template_Fiction_System" ]]; then
+            ./scripts/release-gate.sh \
+              --count "$COUNT" \
+              --parallel "$PARALLEL" \
+              --out "_StressSoak_Nightly_${GITHUB_RUN_ID}" \
+              --baseline "baselines/latest.json" \
+              --latency-noise-ms 5 \
+              --latency-regress-pct 15
+          else
+            echo "::notice title=Nightly soak skipped::_Template_Fiction_System not in checkout (meta-only repo layout)."
+          fi
+
+      - name: Upload nightly soak artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-soak-${{ github.run_id }}
+          path: |
+            _StressSoak_Nightly_${{ github.run_id }}/REPORT.md
+            _StressSoak_Nightly_${{ github.run_id }}/results.json
+            _StressSoak_Nightly_${{ github.run_id }}/timings.csv
+            _StressSoak_Nightly_${{ github.run_id }}/COMPARE.md
+          if-no-files-found: ignore

@@ -42,8 +42,8 @@ If ALL gates are passed, proceed to update the **template** `../_Template_Fictio
 ## Gate 9: Trend guard (non-regression)
 
 - **Check:** Are recent soak runs getting slower or less reliable?
-- **Test:** `./scripts/compare-soak-results.sh OLD.json NEW.json` reports **no regressions** in fail counts and stage latency metrics (p50/p90/p99/avg/max), or the regression is explicitly accepted by the human.
+- **Test:** `./scripts/compare-soak-results.sh OLD.json NEW.json --latency-noise-ms 5 --latency-regress-pct 15 --strict` reports **no regressions** in fail counts and stage latency metrics (p50/p90/p99/avg/max), or the regression is explicitly accepted by the human.
 
 ---
 
-*Quality gates doc version: 2.5*
+*Quality gates doc version: 2.6*

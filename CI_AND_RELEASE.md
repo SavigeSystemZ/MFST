@@ -47,6 +47,30 @@ Artifacts are written under a timestamped `_StressSoak_*` directory with:
   --markdown _StressSoak_Parallel100/COMPARE.md
 ```
 
+## One-command release gate
+
+```bash
+./_Meta_Fiction_System/scripts/release-gate.sh \
+  --count 100 \
+  --parallel 8 \
+  --baseline baselines/latest.json \
+  --latency-noise-ms 5 \
+  --latency-regress-pct 15
+```
+
+With baseline promotion (after human approval):
+
+```bash
+./_Meta_Fiction_System/scripts/release-gate.sh --count 100 --parallel 8 --update-baseline
+```
+
+## Nightly soak workflow
+
+- Workflow: `.github/workflows/nightly-soak.yml`
+- Runs meta verification always.
+- Runs full release-gate only when `_Template_Fiction_System/` exists in the same checkout (monorepo layout).
+- Uploads soak artifacts (`REPORT.md`, `results.json`, `timings.csv`, optional `COMPARE.md`).
+
 ## Optional: monorepo migration for “always-on” template CI
 
 See **`MONOREPO_MIGRATION.md`** if you want GitHub to execute scaffold smoke on every push.
@@ -57,4 +81,4 @@ If this repository uses git tags for template drops: `template-vX.Y.Z` on commit
 
 ---
 
-*CI and release doc version: 1.4.0*
+*CI and release doc version: 1.5.0*

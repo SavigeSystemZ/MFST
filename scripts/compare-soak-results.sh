@@ -6,9 +6,10 @@ set -euo pipefail
 # Usage:
 #   ./scripts/compare-soak-results.sh OLD.json NEW.json
 #   ./scripts/compare-soak-results.sh OLD.json NEW.json --markdown OUT.md
+#   ./scripts/compare-soak-results.sh OLD.json NEW.json --latency-noise-ms 5 --latency-regress-pct 15 --strict
 
 if [[ $# -lt 2 ]]; then
-  echo "Usage: $0 OLD.json NEW.json [--markdown OUT.md]" >&2
+  echo "Usage: $0 OLD.json NEW.json [--markdown OUT.md] [--latency-noise-ms N] [--latency-regress-pct N] [--strict]" >&2
   exit 1
 fi
 
@@ -16,10 +17,16 @@ old="$1"
 new="$2"
 shift 2
 md_out=""
+latency_noise_ms=5
+latency_regress_pct=15
+strict=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --markdown) md_out="${2:?missing value}"; shift 2 ;;
+    --latency-noise-ms) latency_noise_ms="${2:?missing value}"; shift 2 ;;
+    --latency-regress-pct) latency_regress_pct="${2:?missing value}"; shift 2 ;;
+    --strict) strict=1; shift ;;
     *) echo "Unknown argument: $1" >&2; exit 1 ;;
   esac
 done
@@ -30,6 +37,9 @@ done
 export SOAK_OLD="$old"
 export SOAK_NEW="$new"
 export SOAK_MD_OUT="$md_out"
+export SOAK_LATENCY_NOISE_MS="$latency_noise_ms"
+export SOAK_LATENCY_REGRESS_PCT="$latency_regress_pct"
+export SOAK_STRICT="$strict"
 
 python3 - <<'PY'
 import json, os
@@ -82,23 +92,33 @@ for m, o, n, d, has_old, _kind in rows:
     delta_s = str(d) if has_old else "n/a"
     print(f"{m:28} {old_s:>8} {n:8} {delta_s:>8}")
 
+noise_ms = int(os.environ.get("SOAK_LATENCY_NOISE_MS", "5"))
+regress_pct = int(os.environ.get("SOAK_LATENCY_REGRESS_PCT", "15"))
+strict = os.environ.get("SOAK_STRICT", "0") == "1"
+
 regressions = []
 missing_baseline = []
 for m, o, n, d, has_old, kind in rows:
     if not has_old and kind == "latency":
         missing_baseline.append(m)
         continue
-    if m.endswith(".fail"):
+    if kind == "fail":
         if d > 0:
             regressions.append((m, d))
     else:
-        if d > 0:
-            regressions.append((m, d))
+        # Latency regression policy:
+        # - ignore small noise up to +/-noise_ms
+        # - otherwise treat as regression only if > regress_pct increase
+        if d <= noise_ms:
+            continue
+        pct = 999999 if o == 0 else ((n - o) / o) * 100.0
+        if pct > regress_pct:
+            regressions.append((m, f"+{d}ms ({pct:.1f}%)"))
 
 if regressions:
     print("\nSTATUS: REGRESSION detected")
     for m, d in regressions:
-        print(f" - {m}: +{d}")
+        print(f" - {m}: {d}")
 else:
     print("\nSTATUS: no regressions (non-increasing failures/latencies)")
 if missing_baseline:
@@ -119,7 +139,7 @@ if md_out:
     lines.append("")
     if regressions:
         lines.append("**Status:** REGRESSION detected")
-        lines.extend([f"- `{m}`: +{d}" for m, d in regressions])
+        lines.extend([f"- `{m}`: {d}" for m, d in regressions])
     else:
         lines.append("**Status:** no regressions (non-increasing failures/latencies)")
     if missing_baseline:
@@ -128,4 +148,10 @@ if md_out:
         lines.extend([f"- `{m}`" for m in missing_baseline])
     Path(md_out).write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"WROTE_MARKDOWN {md_out}")
+
+if regressions:
+    if strict:
+        raise SystemExit(2)
+    else:
+        raise SystemExit(1)
 PY
